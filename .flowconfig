@@ -1,0 +1,10 @@
+[ignore]
+
+[libs]
+flow/
+
+[include]
+src/
+
+[options]
+module.name_mapper='^scribe\/\(.*\)$' -> '<PROJECT_ROOT>/src/scribe/\1'
