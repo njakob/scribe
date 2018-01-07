@@ -27,10 +27,10 @@ function prepare(): Promise<*> {
 }
 
 async function publish(): Promise<*> {
-  // const githubToken = await publisher.getGithubToken();
-  // await publisher.gitPush();
+  const githubToken = await publisher.getGithubToken();
+  await publisher.gitPush();
   await publisher.npmPublish();
-  // await publisher.githubRelease(githubToken);
+  await publisher.githubRelease(githubToken);
 }
 
 process.on('unhandledRejection', (err: Error) => {
