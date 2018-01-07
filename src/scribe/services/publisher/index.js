@@ -23,10 +23,18 @@ export function standardVersion() {
 
 export function npmPublish(): Promise<*> {
   return new Promise((resolve, reject) => {
-    const npm = spawn('npm', ['publish']);
+    const npm = spawn('npm', ['publish'], { env: process.env });
+    let stderr = '';
+    npm.stderr.on('data', (buf) => {
+      stderr += buf;
+    });
     npm.on('close', (code) => {
       if (code !== 0) {
-        reject();
+        if (/code ENEEDAUTH/.test(stderr)) {
+          reject(new Error('NPM authenticate required'));
+        } else {
+          reject(new Error('Unexpected NPM exit code'));
+        }
         return;
       }
       resolve();

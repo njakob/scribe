@@ -6,9 +6,9 @@ import * as bundler from './services/bundler';
 import * as publisher from './services/publisher';
 
 function handler(ctx, h: (ctx: Object) => Promise<*>) {
-  h(ctx).catch((err) => {
+  h(ctx).catch((err: Error) => {
     // eslint-disable-next-line no-console
-    console.error(err.stack);
+    console.error(err.stack ? err.stack : err);
   });
 }
 
@@ -27,11 +27,16 @@ function prepare(): Promise<*> {
 }
 
 async function publish(): Promise<*> {
-  const githubToken = await publisher.getGithubToken();
-  await publisher.gitPush();
+  // const githubToken = await publisher.getGithubToken();
+  // await publisher.gitPush();
   await publisher.npmPublish();
-  await publisher.githubRelease(githubToken);
+  // await publisher.githubRelease(githubToken);
 }
+
+process.on('unhandledRejection', (err: Error) => {
+  // eslint-disable-next-line no-console
+  console.error('unhandledRejection', err.stack ? err.stack : err);
+});
 
 // eslint-disable-next-line no-unused-expressions
 yargs
